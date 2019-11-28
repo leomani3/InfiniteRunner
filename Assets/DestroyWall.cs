@@ -10,22 +10,26 @@ public class DestroyWall : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
-            for (int i = 0; i < transform.childCount; i++)
+            if (other.gameObject.GetComponent<PlayerMove>().isDashing)
             {
-                transform.GetChild(i).GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-                Vector3 projection = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), -1);
-                transform.GetChild(i).GetComponent<Rigidbody>().AddForce(projection * 500);
+                other.gameObject.GetComponent<PlayerMove>().Scoring();
+                for (int i = 0; i < transform.childCount; i++)
+                {
+                    transform.GetChild(i).GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+                    Vector3 projection = new Vector3(Random.Range(-1f, 1f) * 1000, Random.Range(0f, 1f)* 1000, 1f * 2500);
+                    transform.GetChild(i).GetComponent<Rigidbody>().AddForce(projection);
+                }
             }
+            else
+            {
+                other.gameObject.GetComponent<PlayerMove>().Die();
+            }
+
         }
 
     }
